@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Goleador SMS Marketing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #0f0f1e;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #f1c40f;
+    }
+    input, textarea, button {
+      padding: 12px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      width: 80%;
+      max-width: 500px;
+    }
+    input[type="file"] {
+      background: #fff;
+      color: #000;
+    }
+    button {
+      background-color: #00b894;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #019875;
+    }
+    #progress-container {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #progress-bar {
+      height: 25px;
+      width: 0%;
+      background-color: #27ae60;
+      border-radius: 8px;
+      transition: width 0.3s ease;
+    }
+    #progress-bg {
+      width: 100%;
+      background-color: #333;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Goleador SMS Marketing</h1>
+  <form id="smsForm">
+    <input type="file" name="archivo" id="archivo" accept=".csv,.txt" required/><br/>
+    <textarea name="mensaje" id="mensaje" rows="6" placeholder="Escribe el mensaje usando {numero} y {deuda}" required>PromoClaro: aprovecha hoy descuento especial en tu linea #{numero} por valor de ${deuda}. https://wikidoct.lat/rauYYq Aplican TyC.</textarea><br/>
+    <button type="submit">Enviar Mensajes</button>
+  </form>
+  <div id="progress-container">
+    <div id="progress-bg">
+      <div id="progress-bar"></div>
+    </div>
+    <p id="status-msg"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("smsForm");
+    const bar = document.getElementById("progress-bar");
+    const statusMsg = document.getElementById("status-msg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      bar.style.width = "0%";
+      statusMsg.textContent = "Enviando...";
+
+      const res = await fetch("/enviar", { method: "POST", body: data });
+      const result = await res.json();
+
+      if (result.status === "ok") {
+        bar.style.width = "100%";
+        statusMsg.textContent = `✅ Se enviaron ${result.enviados} de ${result.total} SMS correctamente.`;
+      } else {
+        statusMsg.textContent = `❌ Error: ${result.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
