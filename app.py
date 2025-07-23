@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 # Configuración de la API SMS
 apiaccount = "cs_hd6xbr"
-apipassword = "XNfzeq"
+apipassword = "iXwRbB96"
 senderid = "teddy"
 url = "http://sms.yx19999.com:20003/sendsmsV2"
 max_sms_per_second = 5.0
